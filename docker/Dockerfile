@@ -64,6 +64,9 @@ RUN ${TARGET}/preinstall.sh
 USER magma:magma
 RUN ${TARGET}/fetch.sh && ${MAGMA}/apply_patches.sh
 
+ARG bug
+ENV BUG 	${bug}
+
 ## Configuration parameters
 ARG isan
 ARG harden

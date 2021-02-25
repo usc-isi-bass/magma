@@ -9,6 +9,7 @@
 # - env FUZZARGS: fuzzer arguments
 # - env POLL: time (in seconds) between polls
 # - env TIMEOUT: time to run the campaign
+# + env BUG: if set, use as target for directed fuzzing (patch name)
 # + env SHARED: path to host-local volume where fuzzer findings are saved
 #       (default: no shared volume)
 # + env AFFINITY: the CPU to bind the container to (default: no affinity)
@@ -36,7 +37,13 @@ MAGMA=${MAGMA:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/../../" >/dev/null 2>&1 \
 export MAGMA
 source "$MAGMA/tools/captain/common.sh"
 
-IMG_NAME="magma/$FUZZER/$TARGET"
+if [ ! -z "$BUG" ]; then
+	IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG | tr 'A-Z' 'a-z')"
+	c_name="$FUZZER/$TARGET-$BUG/$PROGRAM"
+else
+	IMG_NAME="$(echo magma/$FUZZER/$TARGET | tr 'A-Z' 'a-z')"
+	c_name="$FUZZER/$TARGET/$PROGRAM"
+fi
 
 if [ ! -z $AFFINITY ]; then
     flag_aff="--cpuset-cpus=$AFFINITY --env=AFFINITY=$AFFINITY"
@@ -64,7 +71,7 @@ else
         $flag_aff $flag_ep "$IMG_NAME"
     )
     container_id=$(cut -c-12 <<< $container_id)
-    echo_time "Container for $FUZZER/$TARGET/$PROGRAM started in $container_id"
+    echo_time "Container for $c_name started in $container_id"
     docker logs -f "$container_id" &
     exit_code=$(docker wait $container_id)
     exit $exit_code

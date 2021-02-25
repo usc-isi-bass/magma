@@ -58,6 +58,36 @@ if [ ! -z "$MAGMA" ]; then
             varname="${IPROGRAM}_ARGS"
             declare DEFAULT_${ITARGET}_${IPROGRAM}_ARGS="${!varname}"
         done
+
+		# Declare another sets, with TARGET_BUG_PROGRAM_ARGS
+        BUGS_str="$(ls $MAGMA/targets/$ITARGET/patches/bugs/ | sed 's/.patch//g')"
+		BUGS=($BUGS_str)
+        declare -a DEFAULT_${ITARGET}_BUGS="($BUGS_str)"
+
+        for IBUG in "${BUGS[@]}"; do
+			# Set programs to [bug_PROGRAMS] if assigned
+			# Otherwise use original program lists [PROGRAMS]
+			bugprograms="${IBUG}_PROGRAMS"
+			if [ ! -z "${!bugprograms}" ]; then
+				vars=$bugprograms[@]
+				PROGRAMS_str="${!vars}"
+			else
+        		PROGRAMS_str="${PROGRAMS[@]}"
+			fi
+        	declare -a DEFAULT_${ITARGET}_${IBUG}_PROGRAMS="($PROGRAMS_str)"
+
+			# Set program args to bug_program_ARGS if assigned
+			# Otherwise use original program args program_ARGS
+			for IPROGRAM in "${PROGRAMS[@]}"; do
+				dvarname="${IBUG}_${IPROGRAM}_ARGS"
+				if [ ! -z "${!dvarname}" ];then
+            		varname=$dvarname
+				else
+            		varname="${IPROGRAM}_ARGS"
+				fi
+				declare DEFAULT_${ITARGET}_${IBUG}_${IPROGRAM}_ARGS="${!varname}"
+			done
+        done
     done
     popd &> /dev/null
 else

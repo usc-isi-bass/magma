@@ -73,10 +73,14 @@ POLL=5
 # FUZZERS: an array of fuzzer names (from magma/fuzzers/*) to evaluate
 FUZZERS=(afl aflfast moptafl aflplusplus fairfuzz honggfuzz)
 
+# D_FUZZERS: an array of directed fuzzer names (from magma/fuzzers/*) to evaluate
+DFUZZERS=(aflgo)
+
 # [fuzzer_TARGETS]: an array of target names (from magma/targets/*) to fuzz with
-# `fuzzer`. The `fuzzer` prefix is a fuzzer listed in the FUZZERS array
+# `fuzzer`. The `fuzzer` prefix is a fuzzer listed in the FUZZERS & DFUZZERS array
 # (default: all targets)
 # afl_TARGETS=(libpng libtiff libxml2)
+# aflgo_TARGETS=(libpng)
 
 # [fuzzer_target_PROGRAMS]: an array of program names (from
 # magma/targets/target/configrc) to use as execution drivers when fuzzing the
@@ -86,6 +90,20 @@ FUZZERS=(afl aflfast moptafl aflplusplus fairfuzz honggfuzz)
 # [fuzzer_target_FUZZARGS]: a string containing fuzzer/target-specific arguments
 # when fuzzing `target` with `fuzzer`
 # afl_libpng_FUZZARGS="-x /magma_shared/png.dict"
+
+# [dfuzzer_target_BUGS]: an array of vulnerable locations
+# (from magma/targets/<target>/patches/bugs/*) for directed fuzzers to focus on
+# The `dfuzzer` prefix is a directed fuzzer listed in the DFUZZERS array
+# The `target` prefix is the target name to fuzz listed in the fuzzer_TARGETS array
+# (default: all bug-patches)
+# aflgo_libpng_BUGS=(AAH001)
+
+# [dfuzzer_target_bug_PROGRAMS]: an array of program names (from
+# magma/targets/target/configrc) to use as execution drivers when directed fuzzing 
+# the `target`:`bug`.
+# If bug_PROGRAMS is set in configurc, then it is set as default. 
+# Otherwise use PROGRAMS.
+# aflgo_libtiff_AAH009_PROGRAMS=(tiffcp)
 
 # [fuzzer_CAMPAIGN_WORKERS]: overrides the global CAMPAIGN_WORKERS setting
 # afl_CAMPAIGN_WORKERS=3
