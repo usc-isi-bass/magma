@@ -63,7 +63,9 @@ EXTRA=""
 
 cp "$WORK/poppler/utils/"{pdfimages,pdftoppm} "$OUT/"
 $CXX $CXXFLAGS -std=c++11 -I"$TARGET/repo/cpp" \
-    "$TARGET/src/pdf_fuzzer.cc" -o "$OUT/pdf_fuzzer" \
+    "$TARGET/src/pdf_fuzzer.cc" -o "pdf_fuzzer" \
     "$WORK/poppler/cpp/libpoppler-cpp.a" "$WORK/poppler/libpoppler.a" \
     "$WORK/lib/libfreetype.a" $LDFLAGS $LIBS -ljpeg -lz \
     -lopenjp2 -lpng -ltiff -llcms2 -lm -lpthread -pthread
+
+cp "pdf_fuzzer" "$OUT/pdf_fuzzer"

@@ -11,11 +11,13 @@ if [ ! -d "$FUZZER/repo" ]; then
     exit 1
 fi
 
+export CC=clang
+export CXX=clang++
 
 pushd $FUZZER/repo
-CC=clang make clean all
+make clean all
 cd llvm_mode
-CC=clang make clean all
+make clean all
 cd ..
 cd distance_calculator/
 cmake -G Ninja ./

@@ -38,22 +38,33 @@ export COPY_CXXFLAGS=$CXXFLAGS
 export ADDITIONAL="-targets=$TMP_DIR/BBtargets.txt -outdir=$TMP_DIR -flto -fuse-ld=gold -Wl,-plugin-opt=save-temps"
 export CFLAGS="$CFLAGS $ADDITIONAL"
 export CXXFLAGS="$CXXFLAGS $ADDITIONAL"
+export RANLIB="/usr/bin/llvm-ranlib"
 
 # Build target in order to generate CG and CFGs
 "$TARGET/build.sh"
 
 # Test whether CG/CFG extraction was successful
-ls $TMP_DIR/dot-files
+echo "Dot-file number: $(ls $TMP_DIR/dot-files | wc | awk '{print $1}')" 
 echo "Function targets"
 cat $TMP_DIR/Ftargets.txt
+if [[ ! -s $TMP_DIR/Ftargets.txt ]]; then
+	echo "Empty Ftargets.txt"
+	echo "Aborting..."
+	exit 1
+fi
 
 # Clean up
 cat $TMP_DIR/BBnames.txt | rev | cut -d: -f2- | rev | sort | uniq > $TMP_DIR/BBnames2.txt && mv $TMP_DIR/BBnames2.txt $TMP_DIR/BBnames.txt
 cat $TMP_DIR/BBcalls.txt | sort | uniq > $TMP_DIR/BBcalls2.txt && mv $TMP_DIR/BBcalls2.txt $TMP_DIR/BBcalls.txt
 
 # Generate distance
+if [[ $TARGET = *poppler* ]]; then
+	build_dir="$TARGET/work/poppler"
+else
+	build_dir="$TARGET/repo"
+fi
 # $AFLGO/scripts/genDistance.sh is the original, but significantly slower, version
-$FUZZER/repo/scripts/genDistance.sh $TARGET/repo $TMP_DIR libpng_read_fuzzer
+$FUZZER/repo/scripts/genDistance.sh $build_dir $TMP_DIR
 
 # Check distance file
 echo "Distance values:"

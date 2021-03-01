@@ -20,8 +20,6 @@ autoreconf -f -i
 make -j$(nproc) clean
 make -j$(nproc) libpng16.la
 
-llvm-ranlib .libs/libpng16.a
-
 cp .libs/libpng16.a "$OUT/"
 
 
