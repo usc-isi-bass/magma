@@ -1,0 +1,22 @@
+diff --git a/afl-fuzz.c b/afl-fuzz.c
+index 21918df..c4b7887 100644
+--- a/afl-fuzz.c
++++ b/afl-fuzz.c
+@@ -2160,7 +2160,7 @@ EXP_ST void init_forkserver(char** argv) {
+   if (waitpid(forksrv_pid, &status, 0) <= 0)
+     PFATAL("waitpid() failed");
+ 
+-  if (WIFSIGNALED(status)) {
++  if (WIFSIGNALED(status) && WTERMSIG(status) != 5) {
+ 
+     if (mem_limit && mem_limit < 500 && uses_asan) {
+ 
+@@ -2469,7 +2469,7 @@ static u8 run_target(char** argv, u32 timeout) {
+ 
+   /* Report outcome to caller. */
+ 
+-  if (WIFSIGNALED(status) && !stop_soon) {
++  if (WIFSIGNALED(status) && WTERMSIG(status) != 5 && !stop_soon) {
+ 
+     kill_signal = WTERMSIG(status);
+
