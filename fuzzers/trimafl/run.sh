@@ -11,6 +11,17 @@
 # - env FUZZARGS: extra arguments to pass to the fuzzer
 ##
 
+# Test if #trimmed-blocks == 0
+export count="$(cat $OUT/tmp/$BUG.trim)"
+if [[ $count = 0 ]]; then
+	echo "Trimmed-blocks = 0 for $BUG"
+	echo "Terminating..."
+	exit
+else
+	echo "Trimmed-blocks = $count for $BUG"
+fi
+
+
 mkdir -p "$SHARED/findings"
 
 export AFL_SKIP_CPUFREQ=1

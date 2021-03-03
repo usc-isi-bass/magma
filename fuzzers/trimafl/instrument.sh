@@ -23,5 +23,11 @@ export LIBS="$LIBS -l:afl_driver.o -lstdc++"
 #       itself is the fuzz target. In the case of Angora, we might need to
 #       replace $OUT by $OUT/fast and $OUT/track, for instance.
 
+source "$TARGET/configrc"
+export TMP_DIR="$OUT/tmp"
+mkdir -p $TMP_DIR
 # Trimming blocks
-python -m trimAFL -f -r "$OUT/$PROGRAM" $TARGET/bug_functions/$BUG
+for IPROGRAM in "${PROGRAMS[@]}"; do
+	python3 -m trimAFL -f -r "$OUT/$IPROGRAM" "$TARGET/bug_functions/$BUG" 2>&1 | tee /dev/stderr | grep 'Trim-number' | awk '{print $NF}' > "$TMP_DIR/$BUG.trim"
+	echo "$(cat $TMP_DIR/$BUG.trim) blocks trimmed for $BUG in $IPROGRAM"
+done

@@ -2,7 +2,7 @@
 set -e
 
 apt-get update && \
-    apt-get install -y make build-essential clang-9 git wget
+    apt-get install -y make build-essential clang-9 git wget radare2
 
 update-alternatives \
   --install /usr/lib/llvm              llvm             /usr/lib/llvm-9  20 \
@@ -35,8 +35,9 @@ update-alternatives \
 
 apt-get install -y python3 python3-dev python3-pip
 pip3 install --upgrade pip
+pip3 install setuptools
 
 cd $FUZZER
 git clone https://party_parrot@bitbucket.org/party_parrot/trimafl.git
 cd trimafl
-python setup.py develop
+python3 setup.py develop
