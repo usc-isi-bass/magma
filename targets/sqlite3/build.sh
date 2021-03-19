@@ -34,6 +34,6 @@ make -j$(nproc)
 make sqlite3.c
 
 $CC $CFLAGS -I. \
-    "$TARGET/repo/test/ossfuzz.c" "./sqlite3.o" \
+    "$TARGET/repo/test/ossfuzz.c" \
     -o "$OUT/sqlite3_fuzz" \
-    $LDFLAGS $LIBS -pthread -ldl
+    $LDFLAGS .libs/libsqlite3.a $LIBS -pthread -ldl -lz
