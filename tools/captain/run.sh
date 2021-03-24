@@ -305,7 +305,6 @@ for FUZZER in "${DFUZZERS[@]}"; do
 			for PROGRAM in "${PROGRAMS[@]}"; do
 				export PROGRAM
 				export ARGS="$(get_var_or_default $FUZZER $TARGET $BUG $PROGRAM 'ARGS')"
-				export $BUG
 
 				echo_time "Starting campaigns for $BUG $PROGRAM $ARGS"
 				for ((i=0; i<$REPEAT; i++)); do
