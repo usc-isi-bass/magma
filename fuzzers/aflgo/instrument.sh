@@ -64,7 +64,9 @@ else
 	build_dir="$TARGET/repo"
 fi
 # $AFLGO/scripts/genDistance.sh is the original, but significantly slower, version
-$FUZZER/repo/scripts/genDistance.sh $build_dir $TMP_DIR
+source "$TARGET/configrc"
+P="${PROGRAMS[@]}" #TODO: Iterate over programs
+$FUZZER/repo/scripts/genDistance.sh $build_dir $TMP_DIR $P
 
 # Check distance file
 echo "Distance values:"
