@@ -27,7 +27,5 @@ source "$TARGET/configrc"
 export TMP_DIR="$OUT/tmp"
 mkdir -p $TMP_DIR
 # Trimming blocks
-for IPROGRAM in "${PROGRAMS[@]}"; do
-	python3 -m trimAFL -f -r "$OUT/$IPROGRAM" "$TARGET/bug_functions/$BUG" 2>&1 | tee /dev/stderr | grep 'Trim-number' | awk '{print $NF}' > "$TMP_DIR/$BUG.trim"
-	echo "$(cat $TMP_DIR/$BUG.trim) blocks trimmed for $BUG in $IPROGRAM"
-done
+python3 -m trimAFL -f -r "$OUT/$PROGRAM" "$TARGET/bug_functions/$BUG" 2>&1 | tee /dev/stderr | grep 'Trim-number' | awk '{print $NF}' > "$TMP_DIR/$BUG.trim"
+echo "$(cat $TMP_DIR/$BUG.trim) blocks trimmed for $BUG in $PROGRAM"

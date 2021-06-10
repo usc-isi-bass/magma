@@ -293,17 +293,16 @@ for FUZZER in "${DFUZZERS[@]}"; do
         for BUG in "${BUGS[@]}"; do
 			# build the Docker image
 			export BUG 
-			IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG | tr 'A-Z' 'a-z')"
-			echo_time "Building $IMG_NAME"
-			if ! "$MAGMA"/tools/captain/build.sh &> \
-			    "${LOGDIR}/${FUZZER}_${TARGET}_${BUG}_build.log"; then
-			    echo_time "Failed to build $IMG_NAME. Check build log for info."
-			    continue
-			fi
-
 			PROGRAMS=($(get_var_or_default $FUZZER $TARGET $BUG 'PROGRAMS'))
 			for PROGRAM in "${PROGRAMS[@]}"; do
 				export PROGRAM
+				IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG-$PROGRAM | tr 'A-Z' 'a-z')"
+				echo_time "Building $IMG_NAME"
+				if ! "$MAGMA"/tools/captain/build.sh &> \
+					"${LOGDIR}/${FUZZER}_${TARGET}_${BUG}_${PROGRAM}_build.log"; then
+					echo_time "Failed to build $IMG_NAME. Check build log for info."
+					continue
+				fi
 				export ARGS="$(get_var_or_default $FUZZER $TARGET $BUG $PROGRAM 'ARGS')"
 
 				echo_time "Starting campaigns for $BUG $PROGRAM $ARGS"

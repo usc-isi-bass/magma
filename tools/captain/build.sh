@@ -6,6 +6,7 @@
 # - env TARGET: target name (from targets/)
 # + env MAGMA: path to magma root (default: ../../)
 # + env BUG: if set, use as target for directed fuzzing (patch name)
+# + env PROGAM: if set, use as target for directed fuzzing (program name)
 # + env ISAN: if set, build the benchmark with ISAN/fatal canaries (default:
 #       unset)
 # + env HARDEN: if set, build the benchmark with hardened canaries (default:
@@ -17,7 +18,7 @@ if [ -z $FUZZER ] || [ -z $TARGET ]; then
     exit 1
 fi
 if [ ! -z "$BUG" ]; then
-	IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG | tr 'A-Z' 'a-z')"
+	IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG/$PROGRAM | tr 'A-Z' 'a-z')"
 else
 	IMG_NAME="$(echo magma/$FUZZER/$TARGET | tr 'A-Z' 'a-z')"
 fi
@@ -53,6 +54,7 @@ docker build -t "$IMG_NAME" \
     --build-arg USER_ID=$(id -u $USER) \
     --build-arg GROUP_ID=$(id -g $USER) \
 	--build-arg bug="${BUG}" \
+	--build-arg program="${PROGRAM}" \
     $mode_flag $isan_flag $harden_flag \
     -f "$MAGMA/docker/Dockerfile" "$MAGMA"
 set +x

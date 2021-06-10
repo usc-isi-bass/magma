@@ -16,10 +16,10 @@ fi
 # build the libpng library
 cd "$TARGET/repo"
 
-CONFIGURE_FLAGS=""
-if [[ $CFLAGS = *sanitize=memory* ]]; then
+#CONFIGURE_FLAGS=""
+#if [[ $CFLAGS = *sanitize=memory* ]]; then
   CONFIGURE_FLAGS="no-asm"
-fi
+#fi
 
 # the config script supports env var LDLIBS instead of LIBS
 export LDLIBS="$LIBS"
@@ -29,6 +29,11 @@ export LDLIBS="$LIBS"
     enable-tls1_3 enable-rc5 enable-md2 enable-ec_nistp_64_gcc_128 enable-ssl3 \
     enable-ssl3-method enable-nextprotoneg enable-weak-ssl-ciphers \
     $CFLAGS -fno-sanitize=alignment $CONFIGURE_FLAGS
+
+replacedCFLAG=$(grep -w "CFLAGS=" repo/Makefile | awk '{for (i=1;i<=NF;i++) if (!a[$i]++) printf("%s%s",$i,FS)}{printf("\n")}')
+replacedCXXFLAG=$(grep -w "CXXFLAGS=" repo/Makefile | awk '{for (i=1;i<=NF;i++) if (!a[$i]++) printf("%s%s",$i,FS)}{printf("\n")}')
+sed -i '/CFLAGS=-include/c\'"$replacedCFLAG"'' Makefile
+sed -i '/CXXFLAGS=-include/c\'"$replacedCXXFLAG"'' Makefile
 
 make -j$(nproc) clean
 make -j$(nproc) LDCMD="$CXX $CXXFLAGS"

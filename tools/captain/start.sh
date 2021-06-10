@@ -38,7 +38,7 @@ export MAGMA
 source "$MAGMA/tools/captain/common.sh"
 
 if [ ! -z "$BUG" ]; then
-	IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG | tr 'A-Z' 'a-z')"
+	IMG_NAME="$(echo magma/$FUZZER/$TARGET-$BUG/$PROGRAM | tr 'A-Z' 'a-z')"
 	c_name="$FUZZER/$TARGET-$BUG/$PROGRAM"
 else
 	IMG_NAME="$(echo magma/$FUZZER/$TARGET | tr 'A-Z' 'a-z')"

@@ -1,0 +1,4 @@
+PKCS7_dataInit
+PKCS7_dataDecode
+PKCS7_dataFinal
+PKCS7_dataVerify

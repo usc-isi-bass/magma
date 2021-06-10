@@ -66,6 +66,8 @@ RUN ${TARGET}/fetch.sh && ${MAGMA}/apply_patches.sh
 
 ARG bug
 ENV BUG 	${bug}
+ARG program
+ENV PROGRAM 	${program}
 
 ## Configuration parameters
 ARG isan

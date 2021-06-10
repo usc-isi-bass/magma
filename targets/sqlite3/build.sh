@@ -33,7 +33,20 @@ make clean
 make -j$(nproc)
 make sqlite3.c
 
+if [[ "$FUZZER" == *"aflgo"* ]]; then
+ if [[ "$CFLAGS" == *"plugin-opt"* ]]; then
+   set +e
+ fi
+fi
+
 $CC $CFLAGS -I. \
-    "$TARGET/repo/test/ossfuzz.c" \
+    "$TARGET/repo/test/ossfuzz.c" "./sqlite3.o" \
     -o "$OUT/sqlite3_fuzz" \
-    $LDFLAGS .libs/libsqlite3.a $LIBS -pthread -ldl -lz
+    $LDFLAGS $LIBS -pthread -ldl
+
+if [[ "$FUZZER" == *"aflgo"* ]]; then
+  if [[ "$CFLAGS" == *"plugin-opt"* ]]; then	
+  echo "AFLGo bitcodes are moving to the target repo"
+  cp *bc* $TARGET/repo
+  fi
+fi
