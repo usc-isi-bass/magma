@@ -31,8 +31,11 @@ for seed in "$TARGET/corpus/$PROGRAM"/*; do
 
     if [ $code -ne 0 ]; then
         echo "$seed: $out"
-        #rm "$seed"
-        echo "PATCH: don't remove $seed"
+		if [[ $target = *trim* ]];then
+        	echo "PATCH: don't remove $seed"
+		else
+        	rm "$seed"
+		fi
     fi
 done
 
